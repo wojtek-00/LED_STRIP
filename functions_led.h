@@ -2,6 +2,8 @@
 #define FUNCTIONS_LED  // Definiuje MY_FUNCTIONS_H
 #include <FastLED.h>
 
+void ledOff();
+
 //just a plain colour
 void plainColour(CRGB colour_fun);
 

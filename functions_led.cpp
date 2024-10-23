@@ -3,21 +3,27 @@
 #include <Arduino.h>
 
 
+void ledOff(){
+  FastLED.setBrightness(0);
+  FastLED.show();
+}
 
 void plainColour(CRGB colour_fun) {
+  FastLED.setBrightness(255);
   fill_solid(leds, NUM_LEDS, colour_fun); // Set the colour
   FastLED.show(); // Show the colour
 }
 
 
 void breathingEffect(int wait, CRGB colour_fun) {
-  for (int brightness = 25; brightness <= 255; brightness++) {
+  for (int brightness = 255; brightness >= 45; brightness--) {
     FastLED.setBrightness(brightness);
     fill_solid(leds, NUM_LEDS, colour_fun);
     FastLED.show();
     delay(wait);
   }
-  for (int brightness = 255; brightness >= 25; brightness--) {
+
+  for (int brightness = 45; brightness <= 255; brightness++) {
     FastLED.setBrightness(brightness);
     fill_solid(leds, NUM_LEDS, colour_fun);
     FastLED.show();
