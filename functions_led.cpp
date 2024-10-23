@@ -5,23 +5,21 @@
 
 
 void plainColour(CRGB colour_fun) {
-  fill_solid(leds, NUM_LEDS, colour_fun); // Ustaw kolor na zadany
-  FastLED.show(); // Wyświetlenie ustawionych kolorów
+  fill_solid(leds, NUM_LEDS, colour_fun); // Set the colour
+  FastLED.show(); // Show the colour
 }
 
 
 void breathingEffect(int wait, CRGB colour_fun) {
-  // Przejrzystość od minimalnej do maksymalnej
   for (int brightness = 25; brightness <= 255; brightness++) {
     FastLED.setBrightness(brightness);
-    fill_solid(leds, NUM_LEDS, colour_fun); // Ustaw kolor na biały
+    fill_solid(leds, NUM_LEDS, colour_fun);
     FastLED.show();
     delay(wait);
   }
-  // Przejrzystość od maksymalnej do minimalnej
   for (int brightness = 255; brightness >= 25; brightness--) {
     FastLED.setBrightness(brightness);
-    fill_solid(leds, NUM_LEDS, colour_fun); // Ustaw kolor na biały
+    fill_solid(leds, NUM_LEDS, colour_fun);
     FastLED.show();
     delay(wait);
   }
@@ -29,36 +27,36 @@ void breathingEffect(int wait, CRGB colour_fun) {
 
 
 void rainbowWave(int wait) {
-  static uint16_t j = 0; // Zmienna do cyklu
+  static uint16_t j = 0;
   for (uint16_t i = 0; i < NUM_LEDS; i++) {
-    leds[i] = Wheel((i + j) & 255); // Ustawienie koloru na podstawie funkcji Wheel
+    leds[i] = Wheel((i + j) & 255);
   }
-  FastLED.show(); // Wyświetlenie ustawionych kolorów
-  j += 1; // Zwiększanie zmiennej cyklu
-  delay(wait); // Opóźnienie
+  FastLED.show();
+  j += 1;
+  delay(wait);
 }
 
 void twinkleEffect(int wait, CRGB colour_fun) {
   for (int i = 0; i < NUM_LEDS; i++) {
-    leds[i] = colour_fun; // Ustawienie koloru na biały
+    leds[i] = colour_fun;
     FastLED.show();
     delay(wait);
-    leds[i] = CRGB::Black; // Wyłączenie diody
+    leds[i] = CRGB::Black;
   }
 }
 
 void colorBurstEffect(int wait) {
   for (int i = 0; i < NUM_LEDS; i++) {
-    leds[i] = CRGB(random(256), random(256), random(256)); // Losowy kolor
+    leds[i] = CRGB(random(256), random(256), random(256));
   }
   FastLED.show();
   delay(wait);
 }
 
 void waveEffect(int wait, CRGB colour_fun) {
-  static uint8_t waveIndex = 0; // Zmienna do przesunięcia fali
+  static uint8_t waveIndex = 0;
   for (int i = 0; i < NUM_LEDS; i++) {
-    leds[i] = CRGB::Black; // Wyłączenie diod
+    leds[i] = CRGB::Black;
   }
   
   for (int i = 0; i < NUM_LEDS; i++) {
@@ -68,21 +66,21 @@ void waveEffect(int wait, CRGB colour_fun) {
   }
   
   FastLED.show();
-  waveIndex = (waveIndex + 1) % 3; // Przesunięcie indeksu fali
+  waveIndex = (waveIndex + 1) % 3;
   delay(wait);
 }
 
 
-// Funkcja do generowania kolorów
+// Generate the colours
 CRGB Wheel(byte WheelPos) {
-  WheelPos = 255 - WheelPos; // Odwracanie kolorów
+  WheelPos = 255 - WheelPos;
   if (WheelPos < 85) {
-    return CRGB(255 - WheelPos * 3, 0, WheelPos * 3); // Przejście od czerwonego do zielonego
+    return CRGB(255 - WheelPos * 3, 0, WheelPos * 3); // move from red to green
   } else if (WheelPos < 170) {
     WheelPos -= 85;
-    return CRGB(0, WheelPos * 3, 255 - WheelPos * 3); // Przejście od zielonego do niebieskiego
+    return CRGB(0, WheelPos * 3, 255 - WheelPos * 3); // move from green to blue
   } else {
     WheelPos -= 170;
-    return CRGB(WheelPos * 3, 255 - WheelPos * 3, 0); // Przejście od niebieskiego do czerwonego
+    return CRGB(WheelPos * 3, 255 - WheelPos * 3, 0); // move from blue to red
   }
 }

@@ -2,9 +2,9 @@
 #ifndef PARAMETERS
 #define PARAMETERS
 
-#define LED_PIN     2     // Pin do którego podłączona jest taśma LED
-#define NUM_LEDS    50    // Liczba diod LED w taśmie
-#define BRIGHTNESS  255   // Maksymalna jasność LED
+#define LED_PIN     2     // Pin to control LED
+#define NUM_LEDS    50    // Amount od LEDs
+#define BRIGHTNESS  255   // Max brightness of LED (255 max)
 #define RELY_PIN    4     // Pin to control rely
 
 extern CRGB leds[NUM_LEDS];
