@@ -59,27 +59,34 @@ void rainbowWave(int interval) {
   }
 }
 
-void twinkleEffect(int interval, CRGB colour_fun) {
+void twinkleEffect(int wait, CRGB colour_fun) {
   unsigned long currentMillis = millis();
   
-  if (currentMillis - previousMillis >= interval) {
+  if (currentMillis - previousMillis >= wait) {
     previousMillis = currentMillis;
 
     if (currentLED == 0){
-      leds[currentLED] = colour_fun;
+      leds[currentLED] = colour;
+      leds[(NUM_LEDS / 2) + currentLED ] = colour;
+
     } else {
-      leds[currentLED] = colour_fun;
+      leds[currentLED] = colour;
       leds[currentLED - 1] = CRGB::Black;
+
+      leds[(NUM_LEDS / 2) + currentLED] = colour;
+      leds[(NUM_LEDS / 2) + currentLED - 1] = CRGB::Black;
     }
     FastLED.show();
     currentLED++;
     
-    if (currentLED >= NUM_LEDS) {
+    if (currentLED >= NUM_LEDS / 2) {
       leds[NUM_LEDS - 1] = CRGB::Black;
+      leds[(NUM_LEDS / 2) - 1] = CRGB::Black;
       currentLED = 0;
     }
   }
 }
+
 
 void colorBurstEffect(int wait) {
   for (int i = 0; i < NUM_LEDS; i++) {
