@@ -59,29 +59,23 @@ void rainbowWave(int interval) {
   }
 }
 
-void twinkleEffect(int wait, CRGB colour_fun) {
-  unsigned long currentMillis = millis();  // Odczytanie bieżącego czasu
+void twinkleEffect(int interval, CRGB colour_fun) {
+  unsigned long currentMillis = millis();
   
-  // Sprawdzenie, czy minął czas od ostatniej aktualizacji
-  if (currentMillis - previousMillis >= wait) {
-    previousMillis = currentMillis;  // Zaktualizowanie poprzedniego czasu
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
 
-    if (ledOn) {
-      // Wyłącz aktualną diodę
-      leds[currentLED] = CRGB::Black;
-      ledOn = false;
-    } else {
-      // Włącz następną diodę
+    if (currentLED == 0){
       leds[currentLED] = colour_fun;
-      ledOn = true;
+    } else {
+      leds[currentLED] = colour_fun;
+      leds[currentLED - 1] = CRGB::Black;
     }
     FastLED.show();
-
-    // Przejdź do następnej diody
     currentLED++;
     
-    // Jeżeli osiągnęliśmy koniec taśmy LED, wróć do początku
     if (currentLED >= NUM_LEDS) {
+      leds[NUM_LEDS - 1] = CRGB::Black;
       currentLED = 0;
     }
   }

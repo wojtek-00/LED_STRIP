@@ -41,8 +41,6 @@ void loop() {
               rainbowWave(20); // Wywołanie efektu tęczowego
               break;
           case 4:
-              fill_solid(leds, NUM_LEDS, CRGB::Black);
-              FastLED.show();
               twinkleEffect(30, colour); // Efekt skręcania
               break;
           case 5:
