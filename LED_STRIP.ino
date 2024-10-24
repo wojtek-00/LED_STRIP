@@ -46,7 +46,7 @@ void loop() {
               twinkleEffect(30, colour); // Efekt skręcania
               break;
           case 5:
-              colorBurstEffect(3000); // Efekt wybuchu kolorów
+              colorBurstEffect(1500); // Efekt wybuchu kolorów
               break;
           case 6:
               waveEffect(100, colour); // Efekt fali

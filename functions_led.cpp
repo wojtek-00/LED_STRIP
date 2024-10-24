@@ -15,39 +15,75 @@ void plainColour(CRGB colour_fun) {
 }
 
 
-void breathingEffect(int wait, CRGB colour_fun) {
-  for (int brightness = 255; brightness >= 45; brightness--) {
-    FastLED.setBrightness(brightness);
-    fill_solid(leds, NUM_LEDS, colour_fun);
-    FastLED.show();
-    delay(wait);
-  }
+void breathingEffect(int interval, CRGB colour_fun) {
+  unsigned long currentMillis = millis();  // Odczytanie bieżącego czasu
+  
+  // Sprawdzenie, czy minął czas od ostatniej aktualizacji jasności
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;  // Zaktualizuj poprzedni czas
 
-  for (int brightness = 45; brightness <= 255; brightness++) {
+    // Aktualizacja jasności LED
+    if (increasing) {
+      brightness++;
+      if (brightness >= 255) {
+        increasing = false;  // Gdy osiągniemy maksymalną jasność, zmieniamy kierunek
+      }
+    } else {
+      brightness--;
+      if (brightness <= 25) {
+        increasing = true;   // Gdy osiągniemy minimalną jasność, zmieniamy kierunek
+      }
+    }
+
+    // Ustawienie jasności i wyświetlenie koloru
     FastLED.setBrightness(brightness);
-    fill_solid(leds, NUM_LEDS, colour_fun);
+    fill_solid(leds, NUM_LEDS, colour_fun); // Ustaw kolor na biały
     FastLED.show();
-    delay(wait);
   }
 }
 
 
-void rainbowWave(int wait) {
-  static uint16_t j = 0;
-  for (uint16_t i = 0; i < NUM_LEDS; i++) {
-    leds[i] = Wheel((i + j) & 255);
+void rainbowWave(int interval) {
+   unsigned long currentMillis = millis();  // Odczytanie bieżącego czasu
+  
+  // Sprawdzenie, czy minął czas od ostatniej aktualizacji jasności
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;  // Zaktualizuj poprzedni czas
+
+    static uint16_t j = 0;
+    for (uint16_t i = 0; i < NUM_LEDS; i++) {
+      leds[i] = Wheel((i + j) & 255);
+    }
+    FastLED.show();
+    j += 1;
   }
-  FastLED.show();
-  j += 1;
-  delay(wait);
 }
 
 void twinkleEffect(int wait, CRGB colour_fun) {
-  for (int i = 0; i < NUM_LEDS; i++) {
-    leds[i] = colour_fun;
+  unsigned long currentMillis = millis();  // Odczytanie bieżącego czasu
+  
+  // Sprawdzenie, czy minął czas od ostatniej aktualizacji
+  if (currentMillis - previousMillis >= wait) {
+    previousMillis = currentMillis;  // Zaktualizowanie poprzedniego czasu
+
+    if (ledOn) {
+      // Wyłącz aktualną diodę
+      leds[currentLED] = CRGB::Black;
+      ledOn = false;
+    } else {
+      // Włącz następną diodę
+      leds[currentLED] = colour_fun;
+      ledOn = true;
+    }
     FastLED.show();
-    delay(wait);
-    leds[i] = CRGB::Black;
+
+    // Przejdź do następnej diody
+    currentLED++;
+    
+    // Jeżeli osiągnęliśmy koniec taśmy LED, wróć do początku
+    if (currentLED >= NUM_LEDS) {
+      currentLED = 0;
+    }
   }
 }
 

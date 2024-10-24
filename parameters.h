@@ -13,4 +13,15 @@ extern CRGB leds[NUM_LEDS];
 extern int effectNumber;
 extern int oldEffectNumber;
 
+
+//################ MILLIS ###################
+extern unsigned long previousMillis;
+
+
+//################ FLAGS ###################
+extern bool increasing;   //flag for breatch
+
+
+extern int currentLED;                       // Aktualny indeks LED
+extern bool ledOn; 
 #endif
