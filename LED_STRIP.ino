@@ -10,50 +10,63 @@ void setup() {
   FastLED.setBrightness(BRIGHTNESS); // Ustawienie jasności
   pinMode(RELY_PIN, OUTPUT);
   digitalWrite(RELY_PIN, LOW);
-  oldEffectNumber = 1;
+  oldEffectNumber = 1;                // defaulf OFF
+  LED_colour = CRGB(255, 255, 255);   // default WHITE colour
 }
 
 void loop() {
   effectNumber = 0;
-  Serial.println("Number: ");
+  
   if (Serial.available() > 0) {
     effectNumber = Serial.parseInt(); //
   }
 
   if (effectNumber == 0){
-
-  } else if (effectNumber != oldEffectNumber){
-    oldEffectNumber = effectNumber;
+    // do nothing
+  } else if (effectNumber <= 14){
+    if (effectNumber != oldEffectNumber){
+      oldEffectNumber = effectNumber;
+      Serial.print("Current animation: ");
+      Serial.println(oldEffectNumber);
+    }
+  } else if (effectNumber >= 15){
+    Serial.print("Farbe: ");
+    int i;
+    for (i = 0; i < colours_size; i++) {
+      if (effectNumber == colours[i].index) {
+        LED_colour = CRGB(colours[i].redValue, colours[i].greenValue, colours[i].blueValue);
+        break;
+        }
+    } 
+    Serial.println(colours[i].name); 
   }
-  Serial.print("Current animation: ");
-  Serial.println(oldEffectNumber);
+  
 
-  CRGB colour = CRGB::White; // Poprawna deklaracja koloru
 
+  // CASE 1 - 15 are for effects
   switch (oldEffectNumber) {
           case 1:
               ledOff();
               break;
           case 2:
-              breathingEffect(15, colour); // Wywołanie funkcji efektu oddychania
+              breathingEffect(15, LED_colour); // Wywołanie funkcji efektu oddychania
               break;
           case 3:
               rainbowWave(20); // Wywołanie efektu tęczowego
               break;
           case 4:
-              twinkleEffect(30, colour); // Efekt skręcania
+              twinkleEffect(30, LED_colour); // Efekt skręcania
               break;
           case 5:
               colorBurstEffect(1500); // Efekt wybuchu kolorów
               break;
           case 6:
-              waveEffect(100, colour); // Efekt fali
+              waveEffect(100, LED_colour); // Efekt fali
               break;
           case 7:
-              plainColour(colour);
+              plainColour(LED_colour);
               break;
           default:
-              ledOff();
               break;
       }
 }

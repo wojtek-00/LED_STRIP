@@ -2,7 +2,6 @@
 #include "parameters.h"
 #include <Arduino.h>
 
-
 void ledOff(){
   FastLED.setBrightness(0);
   FastLED.show();
@@ -14,41 +13,39 @@ void plainColour(CRGB colour_fun) {
   FastLED.show(); // Show the colour
 }
 
-
 void breathingEffect(int interval, CRGB colour_fun) {
-  unsigned long currentMillis = millis();  // Odczytanie bieżącego czasu
+  unsigned long currentMillis = millis();  // Read the current time
   
-  // Sprawdzenie, czy minął czas od ostatniej aktualizacji jasności
+  // Check if the time since the last brightness update has passed
   if (currentMillis - previousMillis >= interval) {
-    previousMillis = currentMillis;  // Zaktualizuj poprzedni czas
+    previousMillis = currentMillis;  // Update the previous time
 
-    // Aktualizacja jasności LED
+    // Update the LED brightness
     if (increasing) {
       brightness++;
       if (brightness >= 255) {
-        increasing = false;  // Gdy osiągniemy maksymalną jasność, zmieniamy kierunek
+        increasing = false;  // When we reach maximum brightness, change direction
       }
     } else {
       brightness--;
       if (brightness <= 25) {
-        increasing = true;   // Gdy osiągniemy minimalną jasność, zmieniamy kierunek
+        increasing = true;   // When we reach minimum brightness, change direction
       }
     }
 
-    // Ustawienie jasności i wyświetlenie koloru
+    // Set the brightness and display the colour
     FastLED.setBrightness(brightness);
-    fill_solid(leds, NUM_LEDS, colour_fun); // Ustaw kolor na biały
+    fill_solid(leds, NUM_LEDS, colour_fun); // Set colour to the specified colour
     FastLED.show();
   }
 }
 
-
 void rainbowWave(int interval) {
-   unsigned long currentMillis = millis();  // Odczytanie bieżącego czasu
+   unsigned long currentMillis = millis();  // Read the current time
   
-  // Sprawdzenie, czy minął czas od ostatniej aktualizacji jasności
+  // Check if the time since the last update has passed
   if (currentMillis - previousMillis >= interval) {
-    previousMillis = currentMillis;  // Zaktualizuj poprzedni czas
+    previousMillis = currentMillis;  // Update the previous time
 
     static uint16_t j = 0;
     for (uint16_t i = 0; i < NUM_LEDS; i++) {
@@ -66,14 +63,14 @@ void twinkleEffect(int wait, CRGB colour_fun) {
     previousMillis = currentMillis;
 
     if (currentLED == 0){
-      leds[currentLED] = colour;
-      leds[(NUM_LEDS / 2) + currentLED ] = colour;
+      leds[currentLED] = colour_fun;
+      leds[(NUM_LEDS / 2) + currentLED] = colour_fun;
 
     } else {
-      leds[currentLED] = colour;
+      leds[currentLED] = colour_fun;
       leds[currentLED - 1] = CRGB::Black;
 
-      leds[(NUM_LEDS / 2) + currentLED] = colour;
+      leds[(NUM_LEDS / 2) + currentLED] = colour_fun;
       leds[(NUM_LEDS / 2) + currentLED - 1] = CRGB::Black;
     }
     FastLED.show();
@@ -87,43 +84,56 @@ void twinkleEffect(int wait, CRGB colour_fun) {
   }
 }
 
-
-void colorBurstEffect(int wait) {
-  for (int i = 0; i < NUM_LEDS; i++) {
-    leds[i] = CRGB(random(256), random(256), random(256));
-  }
-  FastLED.show();
-  delay(wait);
-}
-
-void waveEffect(int wait, CRGB colour_fun) {
-  static uint8_t waveIndex = 0;
-  for (int i = 0; i < NUM_LEDS; i++) {
-    leds[i] = CRGB::Black;
-  }
+void colorBurstEffect(int interval) {
+  unsigned long currentMillis = millis();
   
-  for (int i = 0; i < NUM_LEDS; i++) {
-    if (i % 6 == waveIndex) {
-      leds[i] = colour_fun;
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+
+    for (int i = 0; i < NUM_LEDS; i++) {
+      leds[i] = CRGB(random(256), random(256), random(256));
     }
+    FastLED.show();
   }
-  
-  FastLED.show();
-  waveIndex = (waveIndex + 1) % 3;
-  delay(wait);
 }
 
+void waveEffect(int interval, CRGB colour_fun) {
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+
+    static uint8_t waveIndex = 0;
+
+    // Clear all LEDs
+    for (int i = 0; i < NUM_LEDS; i++) {
+      leds[i] = CRGB::Black;
+    }
+
+    // Set the appropriate LEDs to the colour
+    for (int i = 0; i < NUM_LEDS; i++) {
+      if (i % 6 == waveIndex) { // You can change 6 to another value for different effects
+        leds[i] = colour_fun;
+      }
+    }
+
+    FastLED.show();
+    
+    // Increase the wave index and reset to zero when reaching NUM_LEDS
+    waveIndex = (waveIndex + 1) % 6; // Changed to 6 to match the condition
+  }
+}
 
 // Generate the colours
 CRGB Wheel(byte WheelPos) {
   WheelPos = 255 - WheelPos;
   if (WheelPos < 85) {
-    return CRGB(255 - WheelPos * 3, 0, WheelPos * 3); // move from red to green
+    return CRGB(255 - WheelPos * 3, 0, WheelPos * 3); // Move from red to green
   } else if (WheelPos < 170) {
     WheelPos -= 85;
-    return CRGB(0, WheelPos * 3, 255 - WheelPos * 3); // move from green to blue
+    return CRGB(0, WheelPos * 3, 255 - WheelPos * 3); // Move from green to blue
   } else {
     WheelPos -= 170;
-    return CRGB(WheelPos * 3, 255 - WheelPos * 3, 0); // move from blue to red
+    return CRGB(WheelPos * 3, 255 - WheelPos * 3, 0); // Move from blue to red
   }
 }

@@ -13,6 +13,8 @@ extern CRGB leds[NUM_LEDS];
 extern int effectNumber;
 extern int oldEffectNumber;
 
+extern String colourName;
+extern CRGB LED_colour;
 
 //################ MILLIS ###################
 extern unsigned long previousMillis;
@@ -24,4 +26,19 @@ extern bool increasing;   //flag for breatch
 
 extern int currentLED;                       // Aktualny indeks LED
 extern bool ledOn; 
+
+
+//################ COLOURS ###################
+extern const int colours_size;
+
+struct Colour {
+  int index;
+  String name;
+  int redValue;
+  int greenValue;
+  int blueValue;
+};
+
+extern Colour colours[];
+
 #endif
