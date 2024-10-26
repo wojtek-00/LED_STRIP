@@ -16,12 +16,17 @@ extern int oldEffectNumber;
 extern String colourName;
 extern CRGB LED_colour;
 
+extern int actualColour[3];
+
+extern int dimmVal;
+
 //################ MILLIS ###################
 extern unsigned long previousMillis;
 
 
 //################ FLAGS ###################
 extern bool increasing;   //flag for breatch
+extern bool brightnessChange;   //flag for breatch
 
 
 extern int currentLED;                       // Aktualny indeks LED

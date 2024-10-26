@@ -11,11 +11,16 @@ int oldEffectNumber;
 String colourName;
 CRGB LED_colour;
 
+int actualColour[3];
+
+int dimmVal = 10;
+
 //################ MILLIS ###################
 unsigned long previousMillis = 0;
 
 //################ FLAGS ###################
-bool increasing = true; 
+bool increasing = true;
+bool brightnessChange = true; 
 
 
 int currentLED = 0;                       // Aktualny indeks LED

@@ -29,21 +29,99 @@ void loop() {
       Serial.print("Current animation: ");
       Serial.println(oldEffectNumber);
     }
-  } else if (effectNumber >= 15){
+  } else if (effectNumber >= 15 && effectNumber < 35){
+    // NUMBERS 15-35 for colours
     Serial.print("Farbe: ");
     int i;
     for (i = 0; i < colours_size; i++) {
       if (effectNumber == colours[i].index) {
         LED_colour = CRGB(colours[i].redValue, colours[i].greenValue, colours[i].blueValue);
+
+        actualColour[0] = colours[i].redValue;
+        actualColour[1] = colours[i].greenValue;
+        actualColour[2] = colours[i].blueValue;
+
         break;
         }
     } 
     Serial.println(colours[i].name); 
+  } else if (effectNumber >= 35 && effectNumber < 37){
+    if (effectNumber == 35){ 
+      int x = 5;
+      if ((actualColour[0] != 0 && (LED_colour.r >= 0 && LED_colour.r < dimmVal)) || 
+        (actualColour[1] != 0 && (LED_colour.g >= 0 && LED_colour.g < dimmVal)) || 
+        (actualColour[2] != 0 && (LED_colour.b >= 0 && LED_colour.b < dimmVal))) {
+          
+          Serial.print("VALUE: (");
+          Serial.print(LED_colour.r);
+          Serial.print(", ");
+          Serial.print(LED_colour.g);
+          Serial.print(", ");
+          Serial.print(LED_colour.b);
+          Serial.println(")");
+
+      } else {
+        if (0 < LED_colour.r && LED_colour.r <= 255){
+          LED_colour.r = LED_colour.r - dimmVal;
+        }
+        if (0 < LED_colour.g && LED_colour.g <= 255){
+          LED_colour.g = LED_colour.g - dimmVal;
+        }
+        if (0 < LED_colour.b && LED_colour.b <= 255){
+          LED_colour.b = LED_colour.b - dimmVal;
+        }
+        FastLED.show();
+
+        Serial.print("VALUE: (");
+        Serial.print(LED_colour.r);
+        Serial.print(", ");
+        Serial.print(LED_colour.g);
+        Serial.print(", ");
+        Serial.print(LED_colour.b);
+        Serial.println(")");
+      }
+    } else if (effectNumber == 36){
+      Serial.println("Tu jestem");
+      if ((actualColour[0] != 255 && (LED_colour.r > (255 - dimmVal) && LED_colour.r <= 255)) || 
+        (actualColour[1] != 255 && (LED_colour.g > (255 - dimmVal) && LED_colour.g <= 255)) || 
+        (actualColour[2] != 255 && (LED_colour.b > (255 - dimmVal) && LED_colour.b <= 255))) {
+          
+          Serial.print("VALUE: (");
+          Serial.print(LED_colour.r);
+          Serial.print(", ");
+          Serial.print(LED_colour.g);
+          Serial.print(", ");
+          Serial.print(LED_colour.b);
+          Serial.println(")");
+        
+      } else {
+        if (0 < LED_colour.r && LED_colour.r < 255){
+          LED_colour.r = LED_colour.r + dimmVal;
+          
+        }
+        if (0 < LED_colour.g && LED_colour.g < 255){
+          LED_colour.g = LED_colour.g + dimmVal;
+        
+        }
+        if (0 < LED_colour.b && LED_colour.b < 255){
+          LED_colour.b = LED_colour.b + dimmVal;
+        }
+        FastLED.show();
+
+        Serial.print("VALUE: (");
+        Serial.print(LED_colour.r);
+        Serial.print(", ");
+        Serial.print(LED_colour.g);
+        Serial.print(", ");
+        Serial.print(LED_colour.b);
+        Serial.println(")"); 
+      }
+    }
   }
   
 
 
-  // CASE 1 - 15 are for effects
+  // CASE 1 - 14 are for effects
   switch (oldEffectNumber) {
           case 1:
               ledOff();
