@@ -2,7 +2,11 @@
 #include <FastLED.h>
 #include "parameters.h"
 
+//################ GENERAL ###################
 int brightness = 255;
+int dimmVal = 10;
+
+
 
 CRGB leds[NUM_LEDS];  
 int effectNumber;
@@ -12,25 +16,26 @@ String colourName;
 CRGB LED_colour;
 
 int actualColour[3];
-
-int dimmVal = 10;
-
 //################ FUNCTIONS ###################
 
 //breath
 int breathBrightness = 255;
+bool increasing = true;
+
+//waveEffect
+int LEDDistance = 4;
+int LEDAmount = 3;
+
+//trinkleEffect
+int currentLED = 0;                       // Aktualny indeks LED 
 
 //################ MILLIS ###################
 unsigned long previousMillis = 0;
 
+
 //################ FLAGS ###################
-bool increasing = true;
-bool brightnessChange = true; 
-bool breathBrightChanged = false;
 
 
-int currentLED = 0;                       // Aktualny indeks LED
-bool ledOn = false;    
 
 
 //################ COLOURS ###################

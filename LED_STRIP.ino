@@ -159,7 +159,7 @@ void loop() {
               colorBurstEffect(1500); // Efekt wybuchu kolorów
               break;
           case 6:
-              waveEffect(100, LED_colour); // Efekt fali
+              waveEffect(200, LED_colour); // Efekt fali
               break;
           case 7:
               plainColour(LED_colour);

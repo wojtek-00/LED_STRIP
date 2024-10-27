@@ -8,6 +8,7 @@
 #define RELY_PIN    4     // Pin to control rely
 
 extern int brightness;
+extern int dimmVal;
 
 extern CRGB leds[NUM_LEDS];
 extern int effectNumber;
@@ -17,13 +18,18 @@ extern String colourName;
 extern CRGB LED_colour;
 
 extern int actualColour[3];
-
-extern int dimmVal;
-
 //################ FUNCTIONS ###################
 
 //breath
 extern int breathBrightness;
+extern bool increasing;   //flag for breatch
+
+//waveEffect
+extern int LEDDistance;
+extern int LEDAmount;
+
+//twinkleEffect
+extern int currentLED;                       // Aktualny indeks LED
 
 
 //################ MILLIS ###################
@@ -31,13 +37,7 @@ extern unsigned long previousMillis;
 
 
 //################ FLAGS ###################
-extern bool increasing;   //flag for breatch
-extern bool brightnessChange;   //flag for breatch
-extern bool breathBrightChanged;
 
-
-extern int currentLED;                       // Aktualny indeks LED
-extern bool ledOn; 
 
 
 //################ COLOURS ###################
