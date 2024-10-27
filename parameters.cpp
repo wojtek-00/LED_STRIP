@@ -15,12 +15,18 @@ int actualColour[3];
 
 int dimmVal = 10;
 
+//################ FUNCTIONS ###################
+
+//breath
+int breathBrightness = 255;
+
 //################ MILLIS ###################
 unsigned long previousMillis = 0;
 
 //################ FLAGS ###################
 bool increasing = true;
 bool brightnessChange = true; 
+bool breathBrightChanged = false;
 
 
 int currentLED = 0;                       // Aktualny indeks LED

@@ -8,7 +8,7 @@ void ledOff(){
 }
 
 void plainColour(CRGB colour_fun) {
-  FastLED.setBrightness(255);
+  FastLED.setBrightness(brightness);
   fill_solid(leds, NUM_LEDS, colour_fun); // Set the colour
   FastLED.show(); // Show the colour
 }
@@ -22,19 +22,20 @@ void breathingEffect(int interval, CRGB colour_fun) {
 
     // Update the LED brightness
     if (increasing) {
-      brightness++;
-      if (brightness >= 255) {
+      breathBrightness++;
+      if (breathBrightness >= brightness) {
         increasing = false;  // When we reach maximum brightness, change direction
       }
     } else {
-      brightness--;
-      if (brightness <= 25) {
+      breathBrightness--;
+      if (breathBrightness <= 25) {
         increasing = true;   // When we reach minimum brightness, change direction
       }
     }
 
+
     // Set the brightness and display the colour
-    FastLED.setBrightness(brightness);
+    FastLED.setBrightness(breathBrightness);
     fill_solid(leds, NUM_LEDS, colour_fun); // Set colour to the specified colour
     FastLED.show();
   }
@@ -51,6 +52,7 @@ void rainbowWave(int interval) {
     for (uint16_t i = 0; i < NUM_LEDS; i++) {
       leds[i] = Wheel((i + j) & 255);
     }
+    FastLED.setBrightness(brightness);
     FastLED.show();
     j += 1;
   }
@@ -73,6 +75,7 @@ void twinkleEffect(int wait, CRGB colour_fun) {
       leds[(NUM_LEDS / 2) + currentLED] = colour_fun;
       leds[(NUM_LEDS / 2) + currentLED - 1] = CRGB::Black;
     }
+    FastLED.setBrightness(brightness);
     FastLED.show();
     currentLED++;
     
@@ -91,8 +94,9 @@ void colorBurstEffect(int interval) {
     previousMillis = currentMillis;
 
     for (int i = 0; i < NUM_LEDS; i++) {
-      leds[i] = CRGB(random(256), random(256), random(256));
+      leds[i] = CRGB(random(255), random(255), random(255));
     }
+    FastLED.setBrightness(brightness);
     FastLED.show();
   }
 }
@@ -116,7 +120,7 @@ void waveEffect(int interval, CRGB colour_fun) {
         leds[i] = colour_fun;
       }
     }
-
+    FastLED.setBrightness(brightness);
     FastLED.show();
     
     // Increase the wave index and reset to zero when reaching NUM_LEDS

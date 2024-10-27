@@ -20,6 +20,12 @@ extern int actualColour[3];
 
 extern int dimmVal;
 
+//################ FUNCTIONS ###################
+
+//breath
+extern int breathBrightness;
+
+
 //################ MILLIS ###################
 extern unsigned long previousMillis;
 
@@ -27,6 +33,7 @@ extern unsigned long previousMillis;
 //################ FLAGS ###################
 extern bool increasing;   //flag for breatch
 extern bool brightnessChange;   //flag for breatch
+extern bool breathBrightChanged;
 
 
 extern int currentLED;                       // Aktualny indeks LED

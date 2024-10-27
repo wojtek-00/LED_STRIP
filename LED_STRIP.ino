@@ -46,8 +46,19 @@ void loop() {
     } 
     Serial.println(colours[i].name); 
   } else if (effectNumber >= 35 && effectNumber < 37){
-    if (effectNumber == 35){ 
-      int x = 5;
+    if (brightness >= 0 && brightness <= 255){
+      if (effectNumber == 35){
+        brightness -= dimmVal;
+        if (brightness < 0 ){
+          brightness = 0;
+        }
+
+        Serial.print("Bright: ");
+        Serial.println(brightness);
+
+        
+      
+      /*
       if ((actualColour[0] != 0 && (LED_colour.r >= 0 && LED_colour.r < dimmVal)) || 
         (actualColour[1] != 0 && (LED_colour.g >= 0 && LED_colour.g < dimmVal)) || 
         (actualColour[2] != 0 && (LED_colour.b >= 0 && LED_colour.b < dimmVal))) {
@@ -79,9 +90,16 @@ void loop() {
         Serial.print(", ");
         Serial.print(LED_colour.b);
         Serial.println(")");
-      }
-    } else if (effectNumber == 36){
-      Serial.println("Tu jestem");
+      }*/
+      } else if (effectNumber == 36){
+        Serial.println("Tu jestem");
+        brightness += dimmVal;
+        if (brightness > 255 ){
+          brightness = 255;
+        }
+        Serial.print("Bright: ");
+        Serial.println(brightness);
+      /*
       if ((actualColour[0] != 255 && (LED_colour.r > (255 - dimmVal) && LED_colour.r <= 255)) || 
         (actualColour[1] != 255 && (LED_colour.g > (255 - dimmVal) && LED_colour.g <= 255)) || 
         (actualColour[2] != 255 && (LED_colour.b > (255 - dimmVal) && LED_colour.b <= 255))) {
@@ -115,8 +133,10 @@ void loop() {
         Serial.print(", ");
         Serial.print(LED_colour.b);
         Serial.println(")"); 
+      }*/
       }
     }
+    breathBrightness = brightness;
   }
   
 
