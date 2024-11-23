@@ -1,7 +1,10 @@
 #include "functions_led.h"
 #include "parameters.h"
 #include <FastLED.h> // Dodaj to
+#include <Wire.h>
 
+volatile int receivedValue = 0; // Przechowuje wartość odebraną przez I2C
+volatile bool newData = false;  // Flaga oznaczająca nowe dane
 
 
 void setup() {
@@ -12,14 +15,29 @@ void setup() {
   digitalWrite(RELY_PIN, LOW);
   oldEffectNumber = 1;                // defaulf OFF
   LED_colour = CRGB(255, 255, 255);   // default WHITE colour
+
+  //Wire I2C
+  Wire.begin(8);                  // Inicjalizacja jako Slave z adresem 8
+  Wire.onReceive(receiveEvent);   // Rejestracja funkcji obsługi odbioru danych
+  Serial.begin(9600);             // Inicjalizacja portu szeregowego
 }
 
 void loop() {
   effectNumber = 0;
   
+  if (newData) {                  // Sprawdzenie, czy przyszły nowe dane
+    newData = false;              // Wyłączenie flagi po przetworzeniu danych
+    Serial.print("Otrzymano: ");  // Wypisanie wartości na Serial Monitor
+    Serial.println(receivedValue);
+    if (receivedValue != 0){
+      effectNumber = receivedValue;
+    }
+  }
+/*
   if (Serial.available() > 0) {
     effectNumber = Serial.parseInt(); //
   }
+*/
 
   if (effectNumber == 0){
     // do nothing
@@ -47,6 +65,7 @@ void loop() {
     Serial.println(colours[i].name); 
   } else if (effectNumber >= 35 && effectNumber < 37){
     if (brightness >= 0 && brightness <= 255){
+      //Dimm LED
       if (effectNumber == 35){
         brightness -= dimmVal;
         if (brightness < 0 ){
@@ -56,41 +75,7 @@ void loop() {
         Serial.print("Bright: ");
         Serial.println(brightness);
 
-        
-      
-      /*
-      if ((actualColour[0] != 0 && (LED_colour.r >= 0 && LED_colour.r < dimmVal)) || 
-        (actualColour[1] != 0 && (LED_colour.g >= 0 && LED_colour.g < dimmVal)) || 
-        (actualColour[2] != 0 && (LED_colour.b >= 0 && LED_colour.b < dimmVal))) {
-          
-          Serial.print("VALUE: (");
-          Serial.print(LED_colour.r);
-          Serial.print(", ");
-          Serial.print(LED_colour.g);
-          Serial.print(", ");
-          Serial.print(LED_colour.b);
-          Serial.println(")");
-
-      } else {
-        if (0 < LED_colour.r && LED_colour.r <= 255){
-          LED_colour.r = LED_colour.r - dimmVal;
-        }
-        if (0 < LED_colour.g && LED_colour.g <= 255){
-          LED_colour.g = LED_colour.g - dimmVal;
-        }
-        if (0 < LED_colour.b && LED_colour.b <= 255){
-          LED_colour.b = LED_colour.b - dimmVal;
-        }
-        FastLED.show();
-
-        Serial.print("VALUE: (");
-        Serial.print(LED_colour.r);
-        Serial.print(", ");
-        Serial.print(LED_colour.g);
-        Serial.print(", ");
-        Serial.print(LED_colour.b);
-        Serial.println(")");
-      }*/
+       //Brighter LED
       } else if (effectNumber == 36){
         Serial.println("Tu jestem");
         brightness += dimmVal;
@@ -99,41 +84,7 @@ void loop() {
         }
         Serial.print("Bright: ");
         Serial.println(brightness);
-      /*
-      if ((actualColour[0] != 255 && (LED_colour.r > (255 - dimmVal) && LED_colour.r <= 255)) || 
-        (actualColour[1] != 255 && (LED_colour.g > (255 - dimmVal) && LED_colour.g <= 255)) || 
-        (actualColour[2] != 255 && (LED_colour.b > (255 - dimmVal) && LED_colour.b <= 255))) {
-          
-          Serial.print("VALUE: (");
-          Serial.print(LED_colour.r);
-          Serial.print(", ");
-          Serial.print(LED_colour.g);
-          Serial.print(", ");
-          Serial.print(LED_colour.b);
-          Serial.println(")");
-        
-      } else {
-        if (0 < LED_colour.r && LED_colour.r < 255){
-          LED_colour.r = LED_colour.r + dimmVal;
-          
-        }
-        if (0 < LED_colour.g && LED_colour.g < 255){
-          LED_colour.g = LED_colour.g + dimmVal;
-        
-        }
-        if (0 < LED_colour.b && LED_colour.b < 255){
-          LED_colour.b = LED_colour.b + dimmVal;
-        }
-        FastLED.show();
-
-        Serial.print("VALUE: (");
-        Serial.print(LED_colour.r);
-        Serial.print(", ");
-        Serial.print(LED_colour.g);
-        Serial.print(", ");
-        Serial.print(LED_colour.b);
-        Serial.println(")"); 
-      }*/
+      
       }
     }
     breathBrightness = brightness;
@@ -167,5 +118,12 @@ void loop() {
           default:
               break;
       }
+}
+
+void receiveEvent(int howMany) {
+  if (Wire.available()) {
+    receivedValue = Wire.read();  // Odczyt danych z bufora
+    newData = true;               // Ustawienie flagi, że przyszły nowe dane
+  }
 }
 
