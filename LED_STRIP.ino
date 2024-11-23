@@ -3,8 +3,6 @@
 #include <FastLED.h> // Dodaj to
 #include <Wire.h>
 
-volatile int receivedValue = 0; // Przechowuje wartość odebraną przez I2C
-volatile bool newData = false;  // Flaga oznaczająca nowe dane
 
 
 void setup() {
@@ -12,12 +10,13 @@ void setup() {
   FastLED.addLeds<WS2811, LED_PIN, BRG>(leds, NUM_LEDS); // Inicjalizacja taśmy
   FastLED.setBrightness(BRIGHTNESS); // Ustawienie jasności
   pinMode(RELY_PIN, OUTPUT);
-  digitalWrite(RELY_PIN, LOW);
+  digitalWrite(RELY_PIN, HIGH);
   oldEffectNumber = 1;                // defaulf OFF
   LED_colour = CRGB(255, 255, 255);   // default WHITE colour
+  isOnFlag = false;
 
   //Wire I2C
-  Wire.begin(8);                  // Inicjalizacja jako Slave z adresem 8
+  Wire.begin(SLAVE_ADDR);                  // Inicjalizacja jako Slave z adresem 8
   Wire.onReceive(receiveEvent);   // Rejestracja funkcji obsługi odbioru danych
   Serial.begin(9600);             // Inicjalizacja portu szeregowego
 }
@@ -33,8 +32,9 @@ void loop() {
       effectNumber = receivedValue;
     }
   }
+
 /*
-  if (Serial.available() > 0) {
+  if (Serial.available() > 0) {           // input in terminal
     effectNumber = Serial.parseInt(); //
   }
 */
@@ -47,50 +47,40 @@ void loop() {
       Serial.print("Current animation: ");
       Serial.println(oldEffectNumber);
     }
-  } else if (effectNumber >= 15 && effectNumber < 35){
-    // NUMBERS 15-35 for colours
-    Serial.print("Farbe: ");
-    int i;
-    for (i = 0; i < colours_size; i++) {
-      if (effectNumber == colours[i].index) {
-        LED_colour = CRGB(colours[i].redValue, colours[i].greenValue, colours[i].blueValue);
 
-        actualColour[0] = colours[i].redValue;
-        actualColour[1] = colours[i].greenValue;
-        actualColour[2] = colours[i].blueValue;
-
-        break;
-        }
-    } 
-    Serial.println(colours[i].name); 
-  } else if (effectNumber >= 35 && effectNumber < 37){
-    if (brightness >= 0 && brightness <= 255){
-      //Dimm LED
-      if (effectNumber == 35){
-        brightness -= dimmVal;
-        if (brightness < 0 ){
-          brightness = 0;
-        }
-
-        Serial.print("Bright: ");
-        Serial.println(brightness);
-
-       //Brighter LED
-      } else if (effectNumber == 36){
-        Serial.println("Tu jestem");
-        brightness += dimmVal;
-        if (brightness > 255 ){
-          brightness = 255;
-        }
-        Serial.print("Bright: ");
-        Serial.println(brightness);
-      
+    // Turn on off
+    if (oldEffectNumber == 1) {
+      if (isOnFlag == false){
+        digitalWrite(RELY_PIN, LOW);
+        oldEffectNumber = 7;
+        isOnFlag = true;
+      } else if (isOnFlag == true) {
+        oldEffectNumber = 1;
+        isOnFlag = false;
+        digitalWrite(RELY_PIN, HIGH);
       }
-    }
-    breathBrightness = brightness;
   }
-  
 
+
+  } else if (effectNumber >= 15 && effectNumber < 35 && isOnFlag == true){
+    // NUMBERS 15-35 for colours
+    
+    chooseColour();
+
+    
+  } else if (effectNumber >= 35 && effectNumber < 37 && isOnFlag == true){
+    // Number 35 Dimm, 36 Brighter
+    dimmFunction();
+  }
+
+  
+  if (isOnFlag == false) {
+    if (oldEffectNumber == 1) {
+
+    } else {
+      oldEffectNumber = 0;
+    }
+  }
 
   // CASE 1 - 14 are for effects
   switch (oldEffectNumber) {
@@ -119,6 +109,8 @@ void loop() {
               break;
       }
 }
+
+
 
 void receiveEvent(int howMany) {
   if (Wire.available()) {

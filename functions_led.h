@@ -24,4 +24,12 @@ void waveEffect(int wait, CRGB colour_fun);
 
 CRGB Wheel(byte WheelPos);
 
+
+
+
+void chooseColour();
+
+void dimmFunction();
+
+
 #endif

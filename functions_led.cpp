@@ -141,3 +141,48 @@ CRGB Wheel(byte WheelPos) {
     return CRGB(WheelPos * 3, 255 - WheelPos * 3, 0); // Move from blue to red
   }
 }
+
+
+void chooseColour(){
+  Serial.print("Farbe: ");
+    int i;
+    for (i = 0; i < colours_size; i++) {
+      if (effectNumber == colours[i].index) {
+        LED_colour = CRGB(colours[i].redValue, colours[i].greenValue, colours[i].blueValue);
+
+        actualColour[0] = colours[i].redValue;
+        actualColour[1] = colours[i].greenValue;
+        actualColour[2] = colours[i].blueValue;
+
+        break;
+        }
+    } 
+    Serial.println(colours[i].name); 
+}
+
+void dimmFunction(){
+  if (brightness >= 0 && brightness <= 255){
+      //Dimm LED
+      if (effectNumber == 35){
+        brightness -= dimmVal;
+        if (brightness < 0 ){
+          brightness = 0;
+        }
+
+        Serial.print("Bright: ");
+        Serial.println(brightness);
+
+       //Brighter LED
+      } else if (effectNumber == 36){
+        Serial.println("Tu jestem");
+        brightness += dimmVal;
+        if (brightness > 255 ){
+          brightness = 255;
+        }
+        Serial.print("Bright: ");
+        Serial.println(brightness);
+      
+      }
+    }
+    breathBrightness = brightness;
+}

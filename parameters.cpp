@@ -3,6 +3,11 @@
 #include "parameters.h"
 
 //################ GENERAL ###################
+volatile int receivedValue = 0; // Przechowuje wartość odebraną przez I2C
+volatile bool newData = false;  // Flaga oznaczająca nowe dane
+
+
+
 int brightness = 255;
 int dimmVal = 10;
 
@@ -34,6 +39,7 @@ unsigned long previousMillis = 0;
 
 
 //################ FLAGS ###################
+bool isOnFlag;
 
 
 

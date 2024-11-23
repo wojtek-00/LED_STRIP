@@ -6,6 +6,12 @@
 #define NUM_LEDS    50    // Amount od LEDs
 #define BRIGHTNESS  255   // Max brightness of LED (255 max)
 #define RELY_PIN    4     // Pin to control rely
+#define SLAVE_ADDR   8     // slave addres
+
+
+extern volatile int receivedValue; // Przechowuje wartość odebraną przez I2C
+extern volatile bool newData;  // Flaga oznaczająca nowe dane
+
 
 extern int brightness;
 extern int dimmVal;
@@ -37,6 +43,7 @@ extern unsigned long previousMillis;
 
 
 //################ FLAGS ###################
+extern bool isOnFlag;
 
 
 
