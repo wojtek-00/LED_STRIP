@@ -45,6 +45,8 @@ extern unsigned long previousMillis;
 //################ FLAGS ###################
 extern bool isOnFlag;
 
+extern bool isOnByMotion;
+
 
 
 //################ COLOURS ###################

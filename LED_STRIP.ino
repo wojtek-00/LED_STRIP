@@ -7,8 +7,8 @@
 
 void setup() {
   Serial.begin(9600);
-  FastLED.addLeds<WS2811, LED_PIN, BRG>(leds, NUM_LEDS); // Inicjalizacja taśmy
-  FastLED.setBrightness(BRIGHTNESS); // Ustawienie jasności
+  FastLED.addLeds<WS2811, LED_PIN, BRG>(leds, NUM_LEDS);  // LED Strip initialisation
+  FastLED.setBrightness(BRIGHTNESS);                      // Set the brightness
   pinMode(RELY_PIN, OUTPUT);
   digitalWrite(RELY_PIN, HIGH);
   oldEffectNumber = 1;                // defaulf OFF
@@ -16,17 +16,17 @@ void setup() {
   isOnFlag = false;
 
   //Wire I2C
-  Wire.begin(SLAVE_ADDR);                  // Inicjalizacja jako Slave z adresem 8
-  Wire.onReceive(receiveEvent);   // Rejestracja funkcji obsługi odbioru danych
-  Serial.begin(9600);             // Inicjalizacja portu szeregowego
+  Wire.begin(SLAVE_ADDR);                               // Slave initialisation
+  Wire.onReceive(receiveEvent);
+  Serial.begin(9600);
 }
 
 void loop() {
   effectNumber = 0;
   
-  if (newData) {                  // Sprawdzenie, czy przyszły nowe dane
-    newData = false;              // Wyłączenie flagi po przetworzeniu danych
-    Serial.print("Otrzymano: ");  // Wypisanie wartości na Serial Monitor
+  if (newData) {                              // check if net data is there
+    newData = false;
+    Serial.print("Reveived: ");
     Serial.println(receivedValue);
     if (receivedValue != 0){
       effectNumber = receivedValue;
@@ -71,6 +71,25 @@ void loop() {
   } else if (effectNumber >= 35 && effectNumber < 37 && isOnFlag == true){
     // Number 35 Dimm, 36 Brighter
     dimmFunction();
+
+  } else if (effectNumber >= 55 && effectNumber <= 57) {
+    if (isOnFlag == false && isOnByMotion == false) {
+      if (effectNumber == 55) {
+        digitalWrite(RELY_PIN, LOW);
+        oldEffectNumber = 7;
+        isOnFlag = true;
+        isOnByMotion = true;
+      } else if (effectNumber == 56) {
+        Serial.println ("HDHDHDHHD");
+      }
+    } if (isOnFlag == true && isOnByMotion == true){
+      if (effectNumber == 57) {
+        oldEffectNumber = 1;
+        isOnFlag = false;
+        isOnByMotion = false;
+        digitalWrite(RELY_PIN, HIGH);
+      }
+    }
   }
 
   

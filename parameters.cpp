@@ -41,6 +41,8 @@ unsigned long previousMillis = 0;
 //################ FLAGS ###################
 bool isOnFlag;
 
+bool isOnByMotion = false;
+
 
 
 
