@@ -59,13 +59,10 @@ Colour colours[colours_size] = {
     {17, "blue", 0, 0, 255},              // Niebieski
     {18, "yellow", 255, 255, 0},          // Żółty
     {19, "cyan", 0, 255, 255},            // Cyjan
-    {20, "magenta", 255, 0, 255},         // Magenta
+    {20, "lime", 50, 205, 50},             // Limonkowy
     {21, "white", 255, 255, 255},         // Biały
-    {22, "orange", 255, 165, 0},          // Pomarańczowy
-    {23, "purple", 128, 0, 128},          // Fioletowy
-    {24, "pink", 255, 192, 203},          // Różowy
-    {25, "brown", 165, 42, 42},           // Brązowy
-    {26, "light blue", 173, 216, 230},    // Jasnoniebieski
-    {27, "lime", 0, 255, 0},              // Limetka
-    {28, "gold", 255, 215, 0}             // Złoty
+    {23, "turquoise", 64, 224, 208}, 
+    {27, "teal", 0, 128, 128},             // Morski
+    {29, "olive", 128, 128, 0},            // Oliwkowy
+    {28, "coral", 255, 127, 80}, 
 };

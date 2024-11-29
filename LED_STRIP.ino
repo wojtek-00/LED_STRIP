@@ -23,21 +23,22 @@ void setup() {
 
 void loop() {
   effectNumber = 0;
-  
+  /*
   if (newData) {                              // check if net data is there
     newData = false;
-    Serial.print("Reveived: ");
+    Serial.print("Received: ");
     Serial.println(receivedValue);
     if (receivedValue != 0){
       effectNumber = receivedValue;
     }
   }
+  */
 
-/*
+
   if (Serial.available() > 0) {           // input in terminal
     effectNumber = Serial.parseInt(); //
   }
-*/
+
 
   if (effectNumber == 0){
     // do nothing
@@ -55,7 +56,7 @@ void loop() {
         turnOn(15, CRGB(255, 255, 255), 255);
         //Serial.println("go further ");
       } else if (isOnFlag == true) {
-        turnOff(15, CRGB(255, 255, 255));
+        turnOff(15, LED_colour);
       }
   }
 
@@ -78,13 +79,13 @@ void loop() {
 
       } else if (effectNumber == 56) {       
          
-        turnOn(15, CRGB(255, 255, 0), 255);  // Yellow Light
+        turnOn(15, CRGB(255, 255, 0), 180);  // Yellow Light
 
         isOnByMotion = true;
       }
     } if (isOnFlag == true && isOnByMotion == true){
       if (effectNumber == 57) {                  // turn off
-        turnOff(15, CRGB(255, 255, 255));
+        turnOff(15, LED_colour);
         isOnByMotion = false;
       }
     }
@@ -124,6 +125,8 @@ void loop() {
             //Serial.println("Fun olainr ");
               plainColour(LED_colour);
               break;
+          case 8:
+              colorsAlerating(15);
           default:
               break;
       }

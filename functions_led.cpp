@@ -58,6 +58,26 @@ void rainbowWave(int interval) {
   }
 }
 
+void colorsAlerating(int interval) {
+   unsigned long currentMillis = millis();  // Read the current time
+  
+  // Check if the time since the last update has passed
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;  // Update the previous time
+
+  static int j = 0;
+  LED_colour = Wheel(j & 255);
+
+    for (uint16_t i = 0; i < NUM_LEDS; i++) {
+      leds[i] = LED_colour;
+    }
+    FastLED.setBrightness(brightness);
+    FastLED.show();
+    j += 1;
+  }
+}
+
+
 void twinkleEffect(int wait, CRGB colour_fun) {
   unsigned long currentMillis = millis();
   
@@ -188,34 +208,29 @@ void dimmFunction(){
 }
 
 void turnOn(int wait, CRGB colour_fun, int maxBrightness) { 
-  Serial.print("Turn On function ");
+  Serial.println("Turn on function ");
   LED_colour = colour_fun;
   digitalWrite(RELY_PIN, LOW);
 
   for (int tempBrightness = 0; tempBrightness <= maxBrightness; tempBrightness = tempBrightness + 5) {
-    Serial.print("Bright: ");
-    Serial.println(tempBrightness);
     FastLED.setBrightness(tempBrightness);
     fill_solid(leds, NUM_LEDS, colour_fun); // Set the colour
     FastLED.show(); // Show the colour
     brightness = tempBrightness;
     delay(wait);
   }
-  Serial.print("out of function ");
   oldEffectNumber = 7;
   isOnFlag = true;
 }
 
 void turnOff(int wait, CRGB colour_fun) {
-  Serial.print("Turn off function ");
+  Serial.println("Turn off function ");
 
   for (int tempBrightness = brightness; tempBrightness >= 0; tempBrightness = tempBrightness - 5) {
     FastLED.setBrightness(brightness);
     fill_solid(leds, NUM_LEDS, colour_fun); // Set the colour
     FastLED.show(); // Show the colour
     delay(wait);
-    Serial.print("Bright: ");
-    Serial.println(brightness);
     brightness = tempBrightness;
   }
   if (brightness != 0) {

@@ -13,6 +13,9 @@ void breathingEffect(int wait, CRGB colour_fun);
 //colours chanching along the strip
 void rainbowWave(int wait);
 
+// changing colours on the entire LED Strip
+void colorsAlerating(int interval);
+
 //colour running along the strip
 void twinkleEffect(int wait, CRGB colour_fun);
 
