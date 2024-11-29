@@ -23,7 +23,7 @@ void twinkleEffect(int wait, CRGB colour_fun);
 void colorBurstEffect(int wait);
 
 //
-void waveEffect(int wait, CRGB colour_fun);
+void waveEffect(int wait);
 
 CRGB Wheel(byte WheelPos);
 

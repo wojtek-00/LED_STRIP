@@ -49,6 +49,8 @@ extern bool isOnByMotion;
 
 extern bool isOnTotalFlag;
 
+extern bool turnOffForWave;
+
 
 
 //################ COLOURS ###################

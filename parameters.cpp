@@ -45,6 +45,8 @@ bool isOnByMotion = false;
 
 bool isOnTotalFlag = false;
 
+bool turnOffForWave = false;
+
 
 
 

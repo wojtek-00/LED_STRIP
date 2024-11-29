@@ -121,32 +121,77 @@ void colorBurstEffect(int interval) {
   }
 }
 
-void waveEffect(int interval, CRGB colour_fun) {
+void waveEffect(int interval) {
   unsigned long currentMillis = millis();
+
+  if (turnOffForWave == false) {
+    for (int i = 0; i < NUM_LEDS; i++) {
+      leds[i] = CRGB::Black;
+    }
+    FastLED.setBrightness(255);
+    FastLED.show();
+    turnOffForWave = true;
+  }
 
   if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
 
-    static uint8_t waveIndex = 0;
+    Serial.println("Function Wave");
+    static int waveIndex = 0;
+    static bool modeFlag = false;
+    static int increaseIndex = 40;
 
-    // Clear all LEDs
-    for (int i = 0; i < NUM_LEDS; i++) {
-      leds[i] = CRGB::Black;
+    CRGB tempLedColour = CRGB(0, 0, 0);
+
+    int redValue = LED_colour.r;
+    int greenValue = LED_colour.g;
+    int blueValue = LED_colour.b;
+
+    static int tempRedValue = 0;
+    static int tempGreenValue = 0;
+    static int tempBlueValue = 0;
+
+    waveIndex = waveIndex % NUM_LEDS;
+
+    if (modeFlag == false) {
+      leds[waveIndex] = CRGB(tempRedValue, tempGreenValue, tempBlueValue);
+      FastLED.show();
+
+      tempRedValue += increaseIndex;
+      tempGreenValue += increaseIndex;
+      tempBlueValue += increaseIndex;
+
+      if (tempRedValue >= 255 || tempGreenValue >= 255 || tempBlueValue >= 255) {
+        tempRedValue = 255;
+        tempGreenValue = 255;
+        tempBlueValue = 255;
+        modeFlag = true;
+      }
+      Serial.println(tempRedValue);
+      Serial.println(modeFlag);
     }
 
-    // Set the appropriate LEDs to the colour
-    for (int i = 0; i < NUM_LEDS; i++) {
-      if (i % 6 == waveIndex) { // You can change 6 to another value for different effects
-        leds[i] = colour_fun;
+    if (modeFlag == true) {
+      leds[waveIndex] = CRGB(tempRedValue, tempGreenValue, tempBlueValue);
+      FastLED.show();
+
+      tempRedValue -= increaseIndex;
+      tempGreenValue -= increaseIndex;
+      tempBlueValue -= increaseIndex;
+
+      if (tempRedValue <= 0 || tempGreenValue <= 0 || tempBlueValue <= 0) {
+        tempRedValue = 0;
+        tempGreenValue = 0;
+        tempBlueValue = 0;
+        leds[waveIndex] = CRGB(tempRedValue, tempGreenValue, tempBlueValue);
+        FastLED.show();
+        modeFlag = false;
+        waveIndex += 1;
       }
     }
-    FastLED.setBrightness(brightness);
-    FastLED.show();
-    
-    // Increase the wave index and reset to zero when reaching NUM_LEDS
-    waveIndex = (waveIndex + 1) % 6; // Changed to 6 to match the condition
   }
 }
+
 
 // Generate the colours
 CRGB Wheel(byte WheelPos) {
@@ -240,7 +285,6 @@ void turnOff(int wait, CRGB colour_fun) {
 
   LED_colour = colour_fun;
   digitalWrite(RELY_PIN, HIGH);
-  oldEffectNumber = 1;
   isOnFlag = false;
 }
 

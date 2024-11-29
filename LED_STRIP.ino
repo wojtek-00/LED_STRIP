@@ -91,6 +91,12 @@ void loop() {
     }
   }
 
+
+  if (turnOffForWave == true) {
+    if (oldEffectNumber != 6) {
+      turnOffForWave = false;
+    }
+  }
   
   // if turned off, it will ignore every command besides turn on
   if (isOnFlag == false) {
@@ -104,7 +110,7 @@ void loop() {
   // CASE 1 - 14 are for effects
   switch (oldEffectNumber) {
           case 1:
-              ledOff();
+              //ledOff();
               break;
           case 2:
               breathingEffect(15, LED_colour); // Wywołanie funkcji efektu oddychania
@@ -119,7 +125,7 @@ void loop() {
               colorBurstEffect(1500); // Efekt wybuchu kolorów
               break;
           case 6:
-              waveEffect(200, LED_colour); // Efekt fali
+              waveEffect(1); // Efekt fali
               break;
           case 7:
             //Serial.println("Fun olainr ");
