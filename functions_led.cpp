@@ -186,3 +186,47 @@ void dimmFunction(){
     }
     breathBrightness = brightness;
 }
+
+void turnOn(int wait, CRGB colour_fun, int maxBrightness) { 
+  Serial.print("Turn On function ");
+  LED_colour = colour_fun;
+  digitalWrite(RELY_PIN, LOW);
+
+  for (int tempBrightness = 0; tempBrightness <= maxBrightness; tempBrightness = tempBrightness + 5) {
+    Serial.print("Bright: ");
+    Serial.println(tempBrightness);
+    FastLED.setBrightness(tempBrightness);
+    fill_solid(leds, NUM_LEDS, colour_fun); // Set the colour
+    FastLED.show(); // Show the colour
+    brightness = tempBrightness;
+    delay(wait);
+  }
+  Serial.print("out of function ");
+  oldEffectNumber = 7;
+  isOnFlag = true;
+}
+
+void turnOff(int wait, CRGB colour_fun) {
+  Serial.print("Turn off function ");
+
+  for (int tempBrightness = brightness; tempBrightness >= 0; tempBrightness = tempBrightness - 5) {
+    FastLED.setBrightness(brightness);
+    fill_solid(leds, NUM_LEDS, colour_fun); // Set the colour
+    FastLED.show(); // Show the colour
+    delay(wait);
+    Serial.print("Bright: ");
+    Serial.println(brightness);
+    brightness = tempBrightness;
+  }
+  if (brightness != 0) {
+    brightness = 0;
+    FastLED.setBrightness(brightness);
+  }
+
+  LED_colour = colour_fun;
+  digitalWrite(RELY_PIN, HIGH);
+  oldEffectNumber = 1;
+  isOnFlag = false;
+}
+
+

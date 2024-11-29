@@ -47,6 +47,8 @@ extern bool isOnFlag;
 
 extern bool isOnByMotion;
 
+extern bool isOnTotalFlag;
+
 
 
 //################ COLOURS ###################

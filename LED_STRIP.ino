@@ -11,8 +11,8 @@ void setup() {
   FastLED.setBrightness(BRIGHTNESS);                      // Set the brightness
   pinMode(RELY_PIN, OUTPUT);
   digitalWrite(RELY_PIN, HIGH);
-  oldEffectNumber = 1;                // defaulf OFF
-  LED_colour = CRGB(255, 255, 255);   // default WHITE colour
+  oldEffectNumber = 1;                                    // defaulf OFF
+  LED_colour = CRGB(255, 255, 255);                       // default WHITE colour
   isOnFlag = false;
 
   //Wire I2C
@@ -41,6 +41,7 @@ void loop() {
 
   if (effectNumber == 0){
     // do nothing
+    
   } else if (effectNumber <= 14){
     if (effectNumber != oldEffectNumber){
       oldEffectNumber = effectNumber;
@@ -48,51 +49,49 @@ void loop() {
       Serial.println(oldEffectNumber);
     }
 
-    // Turn on off
+    // Turn on / off
     if (oldEffectNumber == 1) {
       if (isOnFlag == false){
-        digitalWrite(RELY_PIN, LOW);
-        oldEffectNumber = 7;
-        isOnFlag = true;
+        turnOn(15, CRGB(255, 255, 255), 255);
+        //Serial.println("go further ");
       } else if (isOnFlag == true) {
-        oldEffectNumber = 1;
-        isOnFlag = false;
-        digitalWrite(RELY_PIN, HIGH);
+        turnOff(15, CRGB(255, 255, 255));
       }
   }
 
 
   } else if (effectNumber >= 15 && effectNumber < 35 && isOnFlag == true){
     // NUMBERS 15-35 for colours
-    
     chooseColour();
 
-    
   } else if (effectNumber >= 35 && effectNumber < 37 && isOnFlag == true){
     // Number 35 Dimm, 36 Brighter
     dimmFunction();
 
+    // 35 - white light; 36 - yellow; 37 - turn off
   } else if (effectNumber >= 55 && effectNumber <= 57) {
     if (isOnFlag == false && isOnByMotion == false) {
-      if (effectNumber == 55) {
-        digitalWrite(RELY_PIN, LOW);
-        oldEffectNumber = 7;
-        isOnFlag = true;
+      if (effectNumber == 55) {     
+
+        turnOn(15, CRGB(255, 255, 255), 255);   // White light
         isOnByMotion = true;
-      } else if (effectNumber == 56) {
-        Serial.println ("HDHDHDHHD");
+
+      } else if (effectNumber == 56) {       
+         
+        turnOn(15, CRGB(255, 255, 0), 255);  // Yellow Light
+
+        isOnByMotion = true;
       }
     } if (isOnFlag == true && isOnByMotion == true){
-      if (effectNumber == 57) {
-        oldEffectNumber = 1;
-        isOnFlag = false;
+      if (effectNumber == 57) {                  // turn off
+        turnOff(15, CRGB(255, 255, 255));
         isOnByMotion = false;
-        digitalWrite(RELY_PIN, HIGH);
       }
     }
   }
 
   
+  // if turned off, it will ignore every command besides turn on
   if (isOnFlag == false) {
     if (oldEffectNumber == 1) {
 
@@ -122,6 +121,7 @@ void loop() {
               waveEffect(200, LED_colour); // Efekt fali
               break;
           case 7:
+            //Serial.println("Fun olainr ");
               plainColour(LED_colour);
               break;
           default:

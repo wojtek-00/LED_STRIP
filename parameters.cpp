@@ -43,6 +43,8 @@ bool isOnFlag;
 
 bool isOnByMotion = false;
 
+bool isOnTotalFlag = false;
+
 
 
 

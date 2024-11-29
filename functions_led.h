@@ -25,7 +25,9 @@ void waveEffect(int wait, CRGB colour_fun);
 CRGB Wheel(byte WheelPos);
 
 
+void turnOn(int wait, CRGB colour_fun, int maxBrightness);
 
+void turnOff(int wait, CRGB colour_fun);
 
 void chooseColour();
 
