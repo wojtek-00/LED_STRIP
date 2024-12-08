@@ -122,77 +122,69 @@ void colorBurstEffect(int interval) {
 }
 
 // Wave walking around the LED Strip
-void waveEffect(int interval) {
-  unsigned long currentMillis = millis();
 
-  if (turnOffForWave == false) {
-    for (int i = 0; i < NUM_LEDS; i++) {
-      leds[i] = CRGB::Black;
+void waveEffect(int interval) {
+  
+  fill_solid(leds, NUM_LEDS, CRGB(0, 0, 0));
+
+  Serial.println("Wave Function");
+  static bool nextFlag = false;
+  static const int dimmDist = 7;
+  static const int lightDist = 8;
+  static const int lengthWave = (2 * dimmDist) + lightDist;
+  static int waveArray[lengthWave];
+  static int startLED = 0;
+
+  static const float dimmCoeff = 1.0f / dimmDist;
+
+  if (!nextFlag) {
+    for (int i = 0; i < lengthWave; i++) {
+      waveArray[i] = (i + startLED) % NUM_LEDS;
     }
-    FastLED.setBrightness(255);
-    FastLED.show();
+  }
+
+  for (int j = 0; j < dimmDist; j++) {
+    int tempColour[3];
+    tempColour[0] = (LED_colour.r) * (j + 1) * dimmCoeff;
+    tempColour[1] = (LED_colour.g) * (j + 1) * dimmCoeff;
+    tempColour[2] = (LED_colour.b) * (j + 1) * dimmCoeff;
+
+    Serial.println(tempColour[0]);
+
+    CRGB tempLEDColour = CRGB(tempColour[0], tempColour[1], tempColour[2]);
+    leds[waveArray[j]] = tempLEDColour;
+    leds[waveArray[lengthWave - j - 1]] = tempLEDColour;
+
+  }
+
+  
+  for (int i = dimmDist; i < (lightDist + dimmDist); i++) {
+    leds[waveArray[i]] = LED_colour;
+  }
+
+  FastLED.setBrightness(brightness);
+  FastLED.show();
+  startLED++;
+  delay(400);
+  
+}
+
+
+/*    <- MAKE ANOTHER RIGHT FUNCTION !!!!!!!!!!!!!!!!!
+void waveEffect(int interval){
+  if (!turnOffForWave) {
+    fill_solid(leds, NUM_LEDS, CRGB(0, 0, 0));
     turnOffForWave = true;
   }
 
-  if (currentMillis - previousMillis >= interval) {
-    previousMillis = currentMillis;
+  static startLed = 0;
 
-    Serial.println("Function Wave");
-    static int waveIndex = 0;
-    static bool modeFlag = false;
-    static int increaseIndex = 40;
+  for (int i = 0; i < NUM_LEDs; i++){
 
-    CRGB tempLedColour = CRGB(0, 0, 0);
-
-    int redValue = LED_colour.r;
-    int greenValue = LED_colour.g;
-    int blueValue = LED_colour.b;
-
-    static int tempRedValue = 0;
-    static int tempGreenValue = 0;
-    static int tempBlueValue = 0;
-
-    waveIndex = waveIndex % NUM_LEDS;
-
-    if (modeFlag == false) {
-      leds[waveIndex] = CRGB(tempRedValue, tempGreenValue, tempBlueValue);
-      FastLED.show();
-
-      tempRedValue += increaseIndex;
-      tempGreenValue += increaseIndex;
-      tempBlueValue += increaseIndex;
-
-      if (tempRedValue >= 255 || tempGreenValue >= 255 || tempBlueValue >= 255) {
-        tempRedValue = 255;
-        tempGreenValue = 255;
-        tempBlueValue = 255;
-        modeFlag = true;
-      }
-      Serial.println(tempRedValue);
-      Serial.println(modeFlag);
-    }
-
-    if (modeFlag == true) {
-      leds[waveIndex] = CRGB(tempRedValue, tempGreenValue, tempBlueValue);
-      FastLED.show();
-
-      tempRedValue -= increaseIndex;
-      tempGreenValue -= increaseIndex;
-      tempBlueValue -= increaseIndex;
-
-      if (tempRedValue <= 0 || tempGreenValue <= 0 || tempBlueValue <= 0) {
-        tempRedValue = 0;
-        tempGreenValue = 0;
-        tempBlueValue = 0;
-        leds[waveIndex] = CRGB(tempRedValue, tempGreenValue, tempBlueValue);
-        FastLED.show();
-        modeFlag = false;
-        waveIndex += 1;
-      }
-    }
   }
-}
 
+}
+*/
 
 // Generate the colours
 CRGB Wheel(byte WheelPos) {
@@ -210,11 +202,14 @@ CRGB Wheel(byte WheelPos) {
 
 
 void chooseColour(){
+  
   Serial.print("Farbe: ");
     int i;
     for (i = 0; i < colours_size; i++) {
       if (effectNumber == colours[i].index) {
-        LED_colour = CRGB(colours[i].redValue, colours[i].greenValue, colours[i].blueValue);
+        
+        CRGB tempLedColour = CRGB(colours[i].redValue, colours[i].greenValue, colours[i].blueValue);
+        LED_colour = changeColour(tempLedColour);
 
         actualColour[0] = colours[i].redValue;
         actualColour[1] = colours[i].greenValue;
@@ -292,9 +287,8 @@ void turnOff(int wait, CRGB colour_fun) {
 CRGB changeColour(CRGB colour_fun) {
   CRGB tempLedColour = LED_colour;
 
-  int dimmConst = 10;
+  int dimmConst = 1;
   static bool matchFlag[3] = {false, false, false};
-  static int calculationInd[3]; // target > temp -> temp++; target < temp -> temp--; target == temp -> nothing
   static int tempColour[3];
   static int targetColour[3];
 
@@ -310,7 +304,6 @@ CRGB changeColour(CRGB colour_fun) {
   targetColour[1] = colour_fun.g;
   targetColour[2] = colour_fun.b;
 
-  Serial.println("Insife Fun");
 
 
   while (!(matchFlag[0] && matchFlag[1] && matchFlag[2])) {
@@ -338,13 +331,20 @@ CRGB changeColour(CRGB colour_fun) {
 
 
     tempLedColour = CRGB(tempColour[0], tempColour[1], tempColour[2]);
-    Serial.println("Set ind colour");
     fill_solid(leds, NUM_LEDS, tempLedColour); // Set the colour
     FastLED.show();
   }
-  Serial.println("Out of while");
 
   return tempLedColour;
+}
+
+void blinkFun(CRGB colour_fun) {
+  CRGB tempColour = LED_colour;
+  Serial.println("First");
+  LED_colour = changeColour(colour_fun);
+  delay(700);
+  Serial.println("Second");
+  LED_colour = changeColour(tempColour);
 }
 
 

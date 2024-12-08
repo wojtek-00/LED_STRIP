@@ -91,13 +91,12 @@ void loop() {
   } else if (effectNumber >= 70 && effectNumber <= 71){
     if (effectNumber == 70) {
       Serial.println("Number 70");
-
-      LED_colour = changeColour(CRGB(255, 0, 0));
-      fill_solid(leds, NUM_LEDS, LED_colour); // Set the colour
-      FastLED.show();
+      blinkFun(CRGB(255, 0, 0));
       oldEffectNumber = 0;
     } else if (effectNumber == 71) {
-      // red blink
+      Serial.println("Number 71");
+      blinkFun(CRGB(0, 255, 0));
+      oldEffectNumber = 0;
     }
   }
 

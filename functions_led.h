@@ -38,5 +38,7 @@ void dimmFunction();
 
 CRGB changeColour(CRGB colour_fun);
 
+void blinkFun(CRGB colour_fun);
+
 
 #endif
