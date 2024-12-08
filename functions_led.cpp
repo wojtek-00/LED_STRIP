@@ -121,6 +121,7 @@ void colorBurstEffect(int interval) {
   }
 }
 
+// Wave walking around the LED Strip
 void waveEffect(int interval) {
   unsigned long currentMillis = millis();
 
@@ -286,6 +287,64 @@ void turnOff(int wait, CRGB colour_fun) {
   LED_colour = colour_fun;
   digitalWrite(RELY_PIN, HIGH);
   isOnFlag = false;
+}
+
+CRGB changeColour(CRGB colour_fun) {
+  CRGB tempLedColour = LED_colour;
+
+  int dimmConst = 10;
+  static bool matchFlag[3] = {false, false, false};
+  static int calculationInd[3]; // target > temp -> temp++; target < temp -> temp--; target == temp -> nothing
+  static int tempColour[3];
+  static int targetColour[3];
+
+  for (int i = 0; i < 3; i++) {
+    matchFlag[i] = false;
+  }
+
+  tempColour[0] = tempLedColour.r;
+  tempColour[1] = tempLedColour.g;
+  tempColour[2] = tempLedColour.b;
+
+  targetColour[0] = colour_fun.r;
+  targetColour[1] = colour_fun.g;
+  targetColour[2] = colour_fun.b;
+
+  Serial.println("Insife Fun");
+
+
+  while (!(matchFlag[0] && matchFlag[1] && matchFlag[2])) {
+    for (int i = 0; i < 3; i++) {
+      if (!matchFlag[i]) {
+        if (tempColour[i] > targetColour[i]) {
+          tempColour[i] -= dimmConst;
+
+          if (tempColour[i] <= targetColour[i]) {
+            tempColour[i] = targetColour[i];
+            matchFlag[i] = true;
+          }
+        } else if (tempColour[i] < targetColour[i]) {
+          tempColour[i] += dimmConst;
+
+          if (tempColour[i] >= targetColour[i]) {
+            tempColour[i] = targetColour[i];
+            matchFlag[i] = true;
+          }
+        } else {
+          matchFlag[i] = true;
+        }
+      }
+    }
+
+
+    tempLedColour = CRGB(tempColour[0], tempColour[1], tempColour[2]);
+    Serial.println("Set ind colour");
+    fill_solid(leds, NUM_LEDS, tempLedColour); // Set the colour
+    FastLED.show();
+  }
+  Serial.println("Out of while");
+
+  return tempLedColour;
 }
 
 

@@ -36,5 +36,7 @@ void chooseColour();
 
 void dimmFunction();
 
+CRGB changeColour(CRGB colour_fun);
+
 
 #endif
